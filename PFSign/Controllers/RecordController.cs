@@ -2,6 +2,8 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
+using PFStudio.PFSign.Converters;
 using PFStudio.PFSign.Data;
 using PFStudio.PFSign.Models;
 using PFStudio.PFSign.Resources;
@@ -34,7 +36,7 @@ namespace PFStudio.PFSign.Controllers
         /// <returns>[{Name, Seat, SignInTime, SignOutTime}]</returns>
         [HttpGet]
         [AllowAnonymous]
-        public async Task<object> Index
+        public async Task<JsonResult> Index
             (DateTime? begin, DateTime? end)
         {
             // 默认开始时间为当天
@@ -42,17 +44,25 @@ namespace PFStudio.PFSign.Controllers
             // 默认结束时间为开始时间的一天
             DateTime endTime = end ?? beginTime.AddDays(1);
             // 禁用Tracking以提高性能
-            // TODO: 返回Local时间
-            return await (from r in _context.Records.AsNoTracking()
-                          where r.SignInTime >= beginTime
-                          && r.SignInTime <= endTime
-                          select new
-                          {
-                              Name        = r.Name,
-                              Seat        = r.Seat,
-                              SignInTime  = r.SignInTime,
-                              SignOutTime = r.SignOutTime
-                          }).ToListAsync();
+            var records = await (from r in _context.Records.AsNoTracking()
+                                 where r.SignInTime >= beginTime
+                                 && r.SignInTime <= endTime
+                                 select new
+                                 {
+                                     Name        = r.Name,
+                                     Seat        = r.Seat,
+                                     SignInTime  = r.SignInTime,
+                                     SignOutTime = r.SignOutTime
+                                 }).ToListAsync();
+
+            // 配置Json转换设置
+            JsonSerializerSettings serializerSettings
+                = new JsonSerializerSettings();
+            // 添加转换本地时间的转换器
+            serializerSettings.Converters.Add(new SpecialDateTimeConverter());
+
+            // 在解析时，把时间转换为当地时间
+            return new JsonResult(records, serializerSettings);
         }
 
         /// <summary>签到Api</summary>

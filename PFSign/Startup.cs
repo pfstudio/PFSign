@@ -27,16 +27,7 @@ namespace PFStudio.PFSign
             services.AddDbContext<RecordDbContext>(options
                     => options.UseSqlServer(Configuration.GetConnectionString("Local")));
 
-            services.AddMvc()
-                .AddJsonOptions(options => 
-                {
-                    // 格式化返回的JSON字符串
-                    // TODO: 此处的时区设置没有起到任何作用
-                    options.SerializerSettings.DateTimeZoneHandling
-                        = Newtonsoft.Json.DateTimeZoneHandling.Local;
-                    options.SerializerSettings.DateFormatString
-                        = "yyyy/MM/dd HH:mm:ss";
-                });
+            services.AddMvc();
 
             // 添加认证服务
             services.AddAuthentication(options =>
