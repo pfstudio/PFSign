@@ -1,12 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
-using PFSignDemo.Models;
+﻿using Microsoft.EntityFrameworkCore;
+using PFStudio.PFSign.Models;
 
-namespace PFSignDemo.Data
+namespace PFStudio.PFSign.Data
 {
+    /// <summary>
+    /// 签到记录的数据库上下文
+    /// </summary>
     public class RecordDbContext:DbContext
     {
         public RecordDbContext(DbContextOptions<RecordDbContext> options)

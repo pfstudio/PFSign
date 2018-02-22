@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace PFSignDemo.Migrations.RecordDb
+namespace PFStudio.PFSign.Migrations.RecordDb
 {
     public partial class Init : Migration
     {

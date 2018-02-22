@@ -1,10 +1,10 @@
 ﻿using Microsoft.Extensions.Logging;
-using PFSignDemo.Data;
+using PFStudio.PFSign.Data;
 using Pomelo.AspNetCore.TimedJob;
 using System;
 using System.Linq;
 
-namespace PFSignDemo.Services
+namespace PFStudio.PFSign.Services
 {
     /// <summary>
     /// 自动清人
@@ -19,7 +19,9 @@ namespace PFSignDemo.Services
             _logger.LogInformation("Use the AutoClearJob");
         }
 
+        // 每天定时清人
         [Invoke(Begin="2018-01-01" ,Interval = 1000 * 60 * 60 * 24)]
+        // 注入数据库上下文
         public void Clear(RecordDbContext context)
         {
             _logger.LogInformation("Invoke the AutoClearJob");

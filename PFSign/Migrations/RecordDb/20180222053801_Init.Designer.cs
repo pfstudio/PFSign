@@ -5,10 +5,10 @@ using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.EntityFrameworkCore.Storage.Internal;
-using PFSignDemo.Data;
+using PFStudio.PFSign.Data;
 using System;
 
-namespace PFSignDemo.Migrations.RecordDb
+namespace PFStudio.PFSign.Migrations.RecordDb
 {
     [DbContext(typeof(RecordDbContext))]
     [Migration("20180222053801_Init")]
@@ -21,7 +21,7 @@ namespace PFSignDemo.Migrations.RecordDb
                 .HasAnnotation("ProductVersion", "2.0.1-rtm-125")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("PFSignDemo.Models.Record", b =>
+            modelBuilder.Entity("PFStudio.PFSign.Models.Record", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd();

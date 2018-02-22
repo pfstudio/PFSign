@@ -2,20 +2,22 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using PFSignDemo.Data;
-using PFSignDemo.Models;
-using PFSignDemo.Resources;
+using PFStudio.PFSign.Data;
+using PFStudio.PFSign.Models;
+using PFStudio.PFSign.Resources;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace PFSignDemo.Controllers
+namespace PFStudio.PFSign.Controllers
 {
     [Route("/api/[Controller]")]
     [Authorize]
     public class RecordController
     {
+        // 签到记录的上下文
         private readonly RecordDbContext _context;
+        // 用于输出日志
         private readonly ILogger _logger;
 
         public RecordController(
@@ -70,7 +72,6 @@ namespace PFSignDemo.Controllers
             Record record = Record.Create(model);
 
             // 将记录添加到数据库
-            // TODO: 需要更细致的错误处理
             try
             {
                 _logger.LogDebug(
@@ -115,7 +116,6 @@ namespace PFSignDemo.Controllers
             record.SignOutTime = DateTime.UtcNow;
 
             // 更新签到记录
-            // TODO: 需要更细致的错误处理
             try
             {
                 _logger.LogDebug(

@@ -1,23 +1,32 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using PFSignDemo.Resources;
-using System;
-using System.Collections.Generic;
+using PFStudio.PFSign.Resources;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace PFSignDemo.Models
+namespace PFStudio.PFSign.Models
 {
+    /// <summary>
+    /// 签退Model
+    /// </summary>
     public class SignOutModel
     {
+        // 学号
         public string StudentId { get; set; }
 
+        /// <summary>
+        /// 检查是否可以签退
+        /// </summary>
+        /// <param name="records"></param>
+        /// <returns></returns>
         public async Task<RecordResult> Check(IQueryable<Record> records)
         {
+            // 检查参数
             if (StudentId == null)
             {
                 return RecordResult.Fail(RecordErrorResource.UserInfoIncorrect);
             }
 
+            // 检测签到状态
             if (await (from r in records
                        where r.SignOutTime == null
                        && r.StudentId == StudentId

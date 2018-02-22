@@ -4,11 +4,11 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using PFSignDemo.Data;
+using PFStudio.PFSign.Data;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PFSignDemo
+namespace PFStudio.PFSign
 {
     public class Startup
     {

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace PFSignDemo.Models
+namespace PFStudio.PFSign.Models
 {
     /// <summary>
     /// 签到记录

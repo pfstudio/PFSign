@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace PFSignDemo.Models
+﻿namespace PFStudio.PFSign.Models
 {
     /// <summary>
     /// 用于返回签到/签退结果的Model

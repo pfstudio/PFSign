@@ -1,9 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using PFSignDemo.Resources;
+using PFStudio.PFSign.Resources;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace PFSignDemo.Models
+namespace PFStudio.PFSign.Models
 {
     /// <summary>
     /// 签到Model

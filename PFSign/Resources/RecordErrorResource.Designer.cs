@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace PFSignDemo.Resources {
+namespace PFStudio.PFSign.Resources {
     using System;
     
     
@@ -39,7 +39,7 @@ namespace PFSignDemo.Resources {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("PFSignDemo.Resources.RecordErrorResource", typeof(RecordErrorResource).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("PFStudio.PFSign.Resources.RecordErrorResource", typeof(RecordErrorResource).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;

@@ -16,7 +16,7 @@
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
-    "PFSignDemo": {
+    "PFSign": {
       "commandName": "Project",
       "launchBrowser": false,
       "environmentVariables": {

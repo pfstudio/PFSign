@@ -1,12 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using PFSignDemo.Data;
+using PFStudio.PFSign.Data;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
-namespace PFSignDemo
+namespace PFStudio.PFSign
 {
     public class SeedData
     {
