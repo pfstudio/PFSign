@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace PFStudio.PFSign.Resources {
+namespace PFSign.Resources {
     using System;
     
     
@@ -22,7 +22,7 @@ namespace PFStudio.PFSign.Resources {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class RecordErrorResource {
+    public class RecordErrorResource {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
@@ -36,10 +36,10 @@ namespace PFStudio.PFSign.Resources {
         ///   返回此类使用的缓存的 ResourceManager 实例。
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Resources.ResourceManager ResourceManager {
+        public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("PFStudio.PFSign.Resources.RecordErrorResource", typeof(RecordErrorResource).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("PFSign.Resources.RecordErrorResource", typeof(RecordErrorResource).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -51,7 +51,7 @@ namespace PFStudio.PFSign.Resources {
         ///   重写当前线程的 CurrentUICulture 属性。
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Globalization.CultureInfo Culture {
+        public static global::System.Globalization.CultureInfo Culture {
             get {
                 return resourceCulture;
             }
@@ -63,7 +63,7 @@ namespace PFStudio.PFSign.Resources {
         /// <summary>
         ///   查找类似 签到信息错误！ 的本地化字符串。
         /// </summary>
-        internal static string RecordError {
+        public static string RecordError {
             get {
                 return ResourceManager.GetString("RecordError", resourceCulture);
             }
@@ -72,7 +72,7 @@ namespace PFStudio.PFSign.Resources {
         /// <summary>
         ///   查找类似 座位信息错误！ 的本地化字符串。
         /// </summary>
-        internal static string SeatIncorrect {
+        public static string SeatIncorrect {
             get {
                 return ResourceManager.GetString("SeatIncorrect", resourceCulture);
             }
@@ -81,7 +81,7 @@ namespace PFStudio.PFSign.Resources {
         /// <summary>
         ///   查找类似 当前座位已有人！ 的本地化字符串。
         /// </summary>
-        internal static string SeatSigned {
+        public static string SeatSigned {
             get {
                 return ResourceManager.GetString("SeatSigned", resourceCulture);
             }
@@ -90,7 +90,7 @@ namespace PFStudio.PFSign.Resources {
         /// <summary>
         ///   查找类似 上次签到还未签退！ 的本地化字符串。
         /// </summary>
-        internal static string StudentSigned {
+        public static string StudentSigned {
             get {
                 return ResourceManager.GetString("StudentSigned", resourceCulture);
             }
@@ -99,7 +99,7 @@ namespace PFStudio.PFSign.Resources {
         /// <summary>
         ///   查找类似 用户信息错误！ 的本地化字符串。
         /// </summary>
-        internal static string UserInfoIncorrect {
+        public static string UserInfoIncorrect {
             get {
                 return ResourceManager.GetString("UserInfoIncorrect", resourceCulture);
             }
