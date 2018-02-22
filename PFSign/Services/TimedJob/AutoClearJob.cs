@@ -34,10 +34,13 @@ namespace PFStudio.PFSign.Services
             // 对未签退的人进行处理
             foreach (var record in unsignoutList)
             {
-                // 未签退的最多记8小时
-                record.SignOutTime = 
-                    DateTime.UtcNow > record.SignInTime.AddHours(8)
-                    ? record.SignInTime.AddHours(8) : DateTime.UtcNow;
+                // 对签到时间超过24小时的人，只记录8小时的签到时间
+                if (record.SignInTime.AddDays(1) > DateTime.UtcNow)
+                {
+                    continue;
+                }
+                record.SignOutTime = record.SignInTime.AddHours(8);
+
                 // 其他惩罚措施
                 // ...
             }
