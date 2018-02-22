@@ -40,9 +40,9 @@ namespace PFStudio.PFSign.Controllers
             (DateTime? begin, DateTime? end)
         {
             // 默认开始时间为当天
-            DateTime beginTime = begin ?? DateTime.Today.ToUniversalTime();
+            DateTime beginTime = begin?.ToUniversalTime() ?? DateTime.Today.ToUniversalTime();
             // 默认结束时间为开始时间的一天
-            DateTime endTime = end ?? beginTime.AddDays(1);
+            DateTime endTime = end?.ToUniversalTime() ?? beginTime.AddDays(1);
             // 禁用Tracking以提高性能
             var records = await (from r in _context.Records.AsNoTracking()
                                  where r.SignInTime >= beginTime
