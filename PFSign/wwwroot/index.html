@@ -5,6 +5,66 @@
     <title>Index</title>
 </head>
 <body>
-    <h1>Index</h1>
+    <h1>PFSign - Azure AD B2C</h1>
+    <button onclick="login();">登录</button>
+    <button onclick="logout();">登出</button>
+    <h3>JWT Token</h3>
+    <pre id="token" style="max-width:600px;white-space:pre-wrap;word-wrap:break-word;">请登录</pre>
+
+    <script src="scripts/hello.all.js"></script>
+    <script src="aadb2c.js"></script>
+    <script>
+        //applicationID created in AD B2C portal
+        var applicationId = 'e40f6137-3433-4958-ba2b-a4a3765e3298';
+
+        //update the policy names with the exact name from the AD B2C policies blade
+        var policies = {
+            signInSignUpPolicy: "b2c_1_sign"
+        };
+
+        //API url
+        var apiURL = 'https://pfstudio2018.onmicrosoft.com/pfsign';
+        var scope = 'https://pfstudio2018.onmicrosoft.com/pfsign/sign';
+
+        // Do not modify
+        var responseType = 'token id_token';
+        var redirectURI = '../redirect.html';
+
+        //initiate all policies
+        hello.init({
+            adB2CSignInSignUp: applicationId
+        }, {
+                redirect_uri: '../redirect.html',
+                scope: 'openid ' + scope,
+                response_type: 'token id_token'
+            });
+    </script>
+
+    <script>
+        function login() {
+            hello.login(helloJsSignInSignUpPolicy).then(
+                function (auth) {
+                    alert('sign in');
+                    document.getElementById('token').innerText =
+                        JSON.stringify(auth, true, 2);
+                },
+                function (e) {
+                    alert('error');
+                });
+        }
+
+        function logout() {
+            hello.logout(helloJsSignInSignUpPolicy).then(
+                function (auth) {
+                    alert('sign out');
+                    document.getElementById('token').innerText =
+                        '请登录';
+                },
+                function (e) {
+                    alert('error');
+                }
+            );
+        }
+    </script>
 </body>
 </html>
