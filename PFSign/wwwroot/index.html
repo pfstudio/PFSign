@@ -42,29 +42,24 @@
 
     <script>
         function login() {
-            hello.login(helloJsSignInSignUpPolicy).then(
-                function (auth) {
-                    alert('sign in');
-                    document.getElementById('token').innerText =
-                        JSON.stringify(auth, true, 2);
-                },
-                function (e) {
-                    alert('error');
-                });
+            hello.login(helloJsSignInSignUpPolicy);
         }
 
         function logout() {
-            hello.logout(helloJsSignInSignUpPolicy).then(
-                function (auth) {
-                    alert('sign out');
-                    document.getElementById('token').innerText =
-                        '请登录';
-                },
-                function (e) {
-                    alert('error');
-                }
-            );
+            hello.logout(helloJsSignInSignUpPolicy);
         }
+    </script>
+
+    <script>
+        hello.on('auth.login',
+            function (auth) {
+                document.getElementById('token').innerText =
+                    JSON.stringify(auth, true, 2);
+            });
+        hello.on('auth.logout',
+            function (auth) {
+                document.getElementById('token').innerText = '请登录';
+            });
     </script>
 </body>
 </html>

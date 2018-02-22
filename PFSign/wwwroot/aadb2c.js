@@ -1,7 +1,7 @@
 ﻿//These values need to be updated with the specific tenant and its policies.
 var tenantName = "pfstudio2018.onmicrosoft.com";
 var signInSignUpPolicyName = "B2C_1_Sign";
-var logout_redirect_uri = "http://localhost:5001/";
+var logout_redirect_uri = location.origin;
 
 
 //No need to modify the below values
