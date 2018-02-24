@@ -1,0 +1,18 @@
+﻿{
+  "Logging": {
+    "IncludeScopes": false,
+    "LogLevel": {
+      "Default": "Warning"
+    }
+  },
+
+  "ConnectionStrings": {
+    "Local": "[Enter your SQL Server connection string]"
+  },
+
+  "AzureAdB2C": {
+    "ClientId": "[Enter your ClientId]",
+    "Tenant": "[Enter your Tenant]",
+    "Policy": "[Enter your SignUpOrSignIn Policy]"
+  }
+}
