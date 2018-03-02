@@ -18,6 +18,9 @@ namespace PFStudio.PFSign.Controllers
     [Authorize]
     public class RecordController : Controller
     {
+        private readonly static string ScopeType = "http://schemas.microsoft.com/identity/claims/scope";
+        private readonly static string AllowScope = "sign";
+
         // 签到记录的上下文
         private readonly RecordDbContext _context;
         // 用于输出日志
@@ -73,6 +76,11 @@ namespace PFStudio.PFSign.Controllers
         [HttpPost("[Action]")]
         public async Task<RecordResult> SignIn(int? seat)
         {
+            // 检查作用域
+            if (User.FindFirstValue(ScopeType) != AllowScope)
+            {
+                return RecordResult.Fail($"缺少权限！");
+            }
             // 创建签到对象
             SignInModel model = SignInModel.Create(User, seat);
             // 检查是否允许签到
@@ -108,6 +116,11 @@ namespace PFStudio.PFSign.Controllers
         [HttpPost("[Action]")]
         public async Task<RecordResult> SignOut()
         {
+            // 检查作用域
+            if (User.FindFirstValue(ScopeType) != AllowScope)
+            {
+                return RecordResult.Fail($"缺少权限！");
+            }
             // 创建签退对像
             SignOutModel model = SignOutModel.Create(User);
             // 检查签退的相关参数和状态
