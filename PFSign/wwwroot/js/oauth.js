@@ -1,10 +1,6 @@
 ﻿"use strict";
-//applicationID created in AD B2C portal
-var applicationId = 'e40f6137-3433-4958-ba2b-a4a3765e3298';
-
-//API url
-var apiURL = 'https://pfstudio2018.onmicrosoft.com/pfsign/';
-var scope = apiURL + 'sign';
+//please enter your own information or use the settings.js
+//like client Id, api url, api scopes
 
 // Do not modify
 var responseType = 'token id_token';

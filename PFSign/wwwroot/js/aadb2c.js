@@ -1,8 +1,5 @@
-﻿//These values need to be updated with the specific tenant and its policies.
-var tenantName = "pfstudio2018.onmicrosoft.com";
-var signInSignUpPolicyName = "B2C_1_Sign";
-var logout_redirect_uri = location.origin;
-
+﻿//please enter your own information in the settings.js
+//like tenant name, policy name, and redirect uri.
 
 //No need to modify the below values
 var helloJsSignInSignUpPolicy = "adB2CSignInSignUp";

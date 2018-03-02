@@ -1,0 +1,11 @@
+﻿//These values need to be updated with the specific tenant and its policies.
+var tenantName = "[your tenant]";
+var signInSignUpPolicyName = "[sign-in policy]";
+var logout_redirect_uri = location.origin;
+
+//applicationID created in AD B2C portal
+var applicationId = '[your client Id]';
+
+//API url
+var apiURL = '[your api url]';
+var scope = '[needed api scope]';
