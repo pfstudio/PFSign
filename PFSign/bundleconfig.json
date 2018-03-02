@@ -1,0 +1,45 @@
+﻿[
+  {
+    "outputFileName": "wwwroot/bundles/jquery.min.js",
+    "inputFiles": [
+      "node_modules/jquery/dist/jquery.min.js"
+    ],
+    "minify": { "enabled": false }
+  },
+  {
+    "outputFileName": "wwwroot/bundles/hello.all.min.js",
+    "inputFiles": [
+      "node_modules/hellojs/dist/hello.all.min.js"
+    ],
+    "minify": { "enabled": false }
+  },
+  {
+    "outputFileName": "wwwroot/bundles/bootstrap.bundle.min.js",
+    "inputFiles": [
+      "node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"
+    ],
+    "minify": { "enabled": false }
+  },
+  {
+    "outputFileName": "wwwroot/bundles/bootstrap.min.css",
+    "inputFiles": [
+      "node_modules/bootstrap/dist/css/bootstrap.min.css"
+    ],
+    "minify": { "enabled": false }
+  },
+  {
+    "outputFileName": "wwwroot/bundles/jwt-decode.min.js",
+    "inputFiles": [
+      "node_modules/jwt-decode/build/jwt-decode.min.js"
+    ],
+    "minify": { "enabled": false }
+  },
+  {
+    "outputFileName": "wwwroot/bundles/site.min.js",
+    "inputFiles": [
+      "wwwroot/js/aadb2c.js",
+      "wwwroot/js/oauth.js",
+      "wwwroot/js/api.js"
+    ]
+  }
+]

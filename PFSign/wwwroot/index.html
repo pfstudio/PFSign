@@ -2,64 +2,209 @@
 <html>
 <head>
     <meta charset="utf-8" />
-    <title>Index</title>
+    <title>PFSign Demo</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+    <!--<link rel="stylesheet" href="/css/bootstrap.css" />-->
+    <link rel="stylesheet" href="bundles/bootstrap.min.css" />
 </head>
 <body>
-    <h1>PFSign - Azure AD B2C</h1>
-    <button onclick="login();">登录</button>
-    <button onclick="logout();">登出</button>
-    <h3>JWT Token</h3>
-    <pre id="token" style="max-width:600px;white-space:pre-wrap;word-wrap:break-word;">请登录</pre>
+    <main class="container-fluid">
+        <h1>PFSign</h1>
 
-    <script src="scripts/hello.all.js"></script>
-    <script src="aadb2c.js"></script>
-    <script>
-        //applicationID created in AD B2C portal
-        var applicationId = 'e40f6137-3433-4958-ba2b-a4a3765e3298';
+        <div class="row">
+            <!-- slidebar -->
+            <div class="col-md-3 d-none d-md-block">
+                <!-- user info -->
+                <div class="card">
+                    <div class="card-body">
+                        <div id="oauth-info">
+                            <h4 class="card-title">OAuth</h4>
+                            <p class="card-text">
+                                The authorization service is based on the Azure AD B2C.
+                                <br />
+                                If you don't have an account, please register first.
+                            </p>
+                        </div>
+                        <div id="user-info"></div>
+                        <hr />
+                        <div class="btn-group-toggle">
+                            <button class="btn btn-outline-dark" onclick="login();">Login</button>
+                            <button class="btn btn-outline-dark" onclick="logout();">Logout</button>
+                            <button class="btn btn-outline-dark" onclick="refresh();">Refresh</button>
+                        </div>
+                    </div>
+                </div>
+                <br />
+                <!-- token info -->
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="card-title">JWT Token</h4>
+                        <div id="token-info"></div>
+                        <p>You can click the button to see the details about the jwt token.</p>
+                        <div class="btn-group-toggle">
+                            <a id="id-token" role="button" class="btn btn-outline-dark" href="#" target="_blank">Id Token</a>
+                            <a id="access-token" role="button" class="btn btn-outline-dark" href="#" target="_blank">Access Token</a>
+                        </div>
+                    </div>
+                </div>
+                <br />
 
-        //update the policy names with the exact name from the AD B2C policies blade
-        var policies = {
-            signInSignUpPolicy: "b2c_1_sign"
-        };
+            </div>
+            <div class="col-md-9">
 
-        //API url
-        var apiURL = 'https://pfstudio2018.onmicrosoft.com/pfsign';
-        var scope = 'https://pfstudio2018.onmicrosoft.com/pfsign/sign';
+                <h2>API Demo</h2>
 
-        // Do not modify
-        var responseType = 'token id_token';
-        var redirectURI = '../redirect.html';
+                <div class="row">
+                    <div class="col-md-8">
+                        <!-- Query Demo -->
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-8">
+                                        <span class="card-title text-muted">Query Response</span>
+                                        <pre id="query-result" class="pre-scrollable bg-light"></pre>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="input-group mb-3">
+                                            <input type="text" id="begin" class="form-control" placeholder="begin">
+                                            <input type="text" id="end" class="form-control" placeholder="end">
+                                            <div class="input-group-append">
+                                                <button id="query-btn" class="btn btn-outline-secondary" type="button">Query</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Sign In Demo -->
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-8">
+                                        <span class="card-title text-muted">Sign In Response</span>
+                                        <pre id="signin-result" class="pre-scrollable bg-light"></pre>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="input-group mb-3">
+                                            <input type="number" id="seat" class="form-control" placeholder="seat">
+                                            <div class="input-group-append">
+                                                <button id="signin-btn" class="btn btn-outline-secondary" type="button">Sign In</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Sign Out Demo -->
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-8">
+                                        <span class="card-title text-muted">Sign Out Response</span>
+                                        <pre id="signout-result" class="pre-scrollable bg-light"></pre>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <button id="signout-btn" class="btn btn-outline-dark">Sign Out</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <!-- api info -->
+                        <div class="card" style="height:460px;">
+                            <div class="card-body">
+                                <h4 class="card-title">PFSign API</h4>
+                                <p class="card-text">
+                                    APIs use the endpoint <code>/api/Record/</code>
+                                    <br />
+                                    And the template like this <code>/api/Record/[action]</code>
+                                </p>
+                                <ul class="nav nav-tabs" role="tablist">
+                                    <li class="nav-item">
+                                        <a class="nav-link active" href="#Query" role="tab" data-toggle="tab">Query</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="#SignIn" role="tab" data-toggle="tab">SignIn</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="#SignOut" role="tab" data-toggle="tab">SignOut</a>
+                                    </li>
+                                </ul>
 
-        //initiate all policies
-        hello.init({
-            adB2CSignInSignUp: applicationId
-        }, {
-                redirect_uri: '../redirect.html',
-                scope: 'openid ' + scope,
-                response_type: 'token id_token'
-            });
-    </script>
+                                <div class="tab-content">
+                                    <div role="tabpanel" class="tab-pane active" id="Query">
+                                        <dl>
+                                            <dt>Summary</dt>
+                                            <dd>
+                                                Get sign-in records from the server.
+                                            </dd>
+                                            <dt>Method</dt>
+                                            <dd>GET</dd>
+                                            <dt>Authorization</dt>
+                                            <dd>Anonymous</dd>
+                                            <dt>Params</dt>
+                                            <dd>
+                                                <code>begin</code>: Query from the <code>begin</code> date, default is today.
+                                            </dd>
+                                            <dd>
+                                                <code>end</code>: Query end to the <code>end</code> date, default is one after <code>begin</code>.
+                                            </dd>
+                                            <dd>
+                                                <strong>Params Formats:</strong>&nbsp;<span class="text-muted">yyyy-MM-dd</span>
+                                            </dd>
+                                        </dl>
+                                    </div>
+                                    <div role="tabpanel" class="tab-pane" id="SignIn">
+                                        <dl>
+                                            <dt>Summary</dt>
+                                            <dd>
+                                                Create a new sign-in record.
+                                            </dd>
+                                            <dt>Method</dt>
+                                            <dd>POST</dd>
+                                            <dt>Authorization</dt>
+                                            <dd>Authorize</dd>
+                                            <dt>Params</dt>
+                                            <dd>
+                                                <code>seat</code>: the seat number, where you will be signed
+                                            </dd>
+                                        </dl>
+                                    </div>
+                                    <div role="tabpanel" class="tab-pane" id="SignOut">
+                                        <dl>
+                                            <dt>Summary</dt>
+                                            <dd>
+                                                Make the sign-out record.
+                                            </dd>
+                                            <dt>Method</dt>
+                                            <dd>POST</dd>
+                                            <dt>Authorization</dt>
+                                            <dd>Authorize</dd>
+                                            <dt>Params</dt>
+                                            <dd>None</dd>
+                                        </dl>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
 
-    <script>
-        function login() {
-            hello.login(helloJsSignInSignUpPolicy);
-        }
-
-        function logout() {
-            hello.logout(helloJsSignInSignUpPolicy);
-        }
-    </script>
-
-    <script>
-        hello.on('auth.login',
-            function (auth) {
-                document.getElementById('token').innerText =
-                    JSON.stringify(auth, true, 2);
-            });
-        hello.on('auth.logout',
-            function (auth) {
-                document.getElementById('token').innerText = '请登录';
-            });
-    </script>
+    <!--<script src="/js/jquery.js"></script>
+    <script src="/js/bootstrap.bundle.js"></script>
+    <script src="/js/hello.all.js"></script>
+    <script src="js/jwt-decode.js"></script>
+    <script src="/js/aadb2c.js"></script>
+    <script src="/js/oauth.js"></script>
+    <script src="/js/api.js"></script>-->
+    <script src="bundles/jquery.min.js"></script>
+    <script src="bundles/bootstrap.bundle.min.js"></script>
+    <script src="bundles/hello.all.min.js"></script>
+    <script src="bundles/jwt-decode.min.js"></script>
+    <script src="bundles/site.min.js"></script>
 </body>
 </html>

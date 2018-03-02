@@ -1,0 +1,13 @@
+{
+  "name": "pfsign",
+  "version": "1.0.0",
+  "description": "ǩ��ϵͳ",
+  "author": "yiluomyt",
+  "license": "MIT",
+  "dependencies": {
+    "bootstrap": "^4.0.0",
+    "hellojs": "^1.16.1",
+    "jquery": "^3.3.1",
+    "jwt-decode": "^2.2.0"
+  }
+}

@@ -9,13 +9,14 @@ using PFStudio.PFSign.Models;
 using PFStudio.PFSign.Resources;
 using System;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace PFStudio.PFSign.Controllers
 {
     [Route("/api/[Controller]")]
     [Authorize]
-    public class RecordController
+    public class RecordController : Controller
     {
         // 签到记录的上下文
         private readonly RecordDbContext _context;
@@ -34,9 +35,9 @@ namespace PFStudio.PFSign.Controllers
         /// <param name="begin">开始日期</param>
         /// <param name="end">结束日期</param>
         /// <returns>[{Name, Seat, SignInTime, SignOutTime}]</returns>
-        [HttpGet]
+        [HttpGet("[action]")]
         [AllowAnonymous]
-        public async Task<JsonResult> Index
+        public async Task<JsonResult> Query
             (DateTime? begin, DateTime? end)
         {
             // 默认开始时间为当天
@@ -47,6 +48,7 @@ namespace PFStudio.PFSign.Controllers
             var records = await (from r in _context.Records.AsNoTracking()
                                  where r.SignInTime >= beginTime
                                  && r.SignInTime <= endTime
+                                 orderby r.SignInTime
                                  select new
                                  {
                                      Name        = r.Name,
@@ -66,11 +68,13 @@ namespace PFStudio.PFSign.Controllers
         }
 
         /// <summary>签到Api</summary>
-        /// <param name="model"><seealso cref="SignInModel"/></param>
+        /// <param name="seat">座位号</param>
         /// <returns>签到结果<see cref="RecordResult"/></returns>
         [HttpPost("[Action]")]
-        public async Task<RecordResult> SignIn(SignInModel model)
+        public async Task<RecordResult> SignIn(int? seat)
         {
+            // 创建签到对象
+            SignInModel model = SignInModel.Create(User, seat);
             // 检查是否允许签到
             RecordResult checkResult = await model.Check(_context.Records.AsNoTracking());
             if (!checkResult.Result)
@@ -100,11 +104,12 @@ namespace PFStudio.PFSign.Controllers
         }
 
         /// <summary>签退Api</summary>
-        /// <param name="model"><seealso cref="SignOutModel"/></param>
         /// <returns>签到结果<see cref="RecordResult"/></returns>
         [HttpPost("[Action]")]
-        public async Task<RecordResult> SignOut(SignOutModel model)
+        public async Task<RecordResult> SignOut()
         {
+            // 创建签退对像
+            SignOutModel model = SignOutModel.Create(User);
             // 检查签退的相关参数和状态
             RecordResult checkResult = await model.Check(_context.Records.AsNoTracking());
             if (!checkResult.Result)

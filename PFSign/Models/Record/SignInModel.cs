@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using PFStudio.PFSign.Resources;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace PFStudio.PFSign.Models
@@ -10,12 +11,32 @@ namespace PFStudio.PFSign.Models
     /// </summary>
     public class SignInModel
     {
+        // Claim Type
+        private readonly static string StudentIdType = "extension_StudentId";
+        private readonly static string NameType = "name";
+
         // 学号
         public string StudentId { get; set; }
         // 姓名
         public string Name { get; set; }
         // 座位号
         public int? Seat { get; set; }
+
+        /// <summary>
+        /// 创建签到Model
+        /// </summary>
+        /// <param name="user">Controller 中的User</param>
+        /// <param name="seat">座位号</param>
+        /// <returns></returns>
+        public static SignInModel Create(ClaimsPrincipal user, int? seat)
+        {
+            return new SignInModel()
+            {
+                StudentId = user.FindFirstValue(StudentIdType),
+                Name = user.FindFirstValue(NameType),
+                Seat = seat
+            };
+        }
 
         /// <summary>
         /// 检查是否允许签到

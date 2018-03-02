@@ -262,3 +262,7 @@ __pycache__/
 
 # 配置文件
 appsettings.json
+
+# bundlefiles
+*.min.css
+*.min.js
