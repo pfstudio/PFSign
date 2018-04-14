@@ -1,0 +1,20 @@
+version: '3'
+services:
+  mysql:
+    container_name: demo.db
+    image: mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=password
+    volumes:
+      - ./mysql:/var/lib/mysql
+  
+  web:
+    container_name: demo.web
+    image: pfsign:dev
+    build: .
+    depends_on:
+      - mysql
+    links:
+      - mysql
+    ports:
+      - "80:80"
