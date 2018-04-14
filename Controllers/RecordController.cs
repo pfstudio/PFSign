@@ -32,18 +32,11 @@ namespace PFStudio.PFSign.Controllers
         /// <param name="end">结束日期</param>
         /// <returns>[{Name, Seat, SignInTime, SignOutTime}]</returns>
         [HttpGet("[action]")]
-        public async Task<JsonResult> Query(DateTime? begin, DateTime? end,
+        public async Task<JsonResult> Query(QueryModel model,
             [FromServices]JsonSerializerSettings serializerSettings)
         {
-            // 默认开始时间为当天
-            DateTime beginTime = begin?.ToUniversalTime() ?? DateTime.Today.ToUniversalTime();
-            // 默认结束时间为开始时间的一天
-            DateTime endTime = end?.ToUniversalTime() ?? beginTime.AddDays(1);
-
             // 禁用Tracking以提高性能
-            var records = await (from r in _context.Records.AsNoTracking()
-                                 where r.SignInTime >= beginTime
-                                 && r.SignInTime <= endTime
+            var records = await (from r in model.Filter(_context.Records.AsNoTracking())
                                  orderby r.SignInTime
                                  select new
                                  {
