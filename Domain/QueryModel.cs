@@ -14,8 +14,8 @@ namespace PFStudio.PFSign.Domain
         public DateTime? Begin { get; set; }
         public DateTime? End { get; set; }
         public string StudentId { get; set; }
-        //public int Skip { get; set; } = 0;
-        //public int Size { get; set; } = 20;
+        public int Skip { get; set; } = 0;
+        public int Size { get; set; } = 20;
 
         public IQueryable<Record> Filter(IQueryable<Record> query)
         {
@@ -32,8 +32,7 @@ namespace PFStudio.PFSign.Domain
             query = StudentId is null ? query : query.Where(r => r.StudentId == StudentId);
 
             // 启用分页
-            //return query.Skip(Skip).Take(Size);
-            return query;
+            return query.Skip(Skip).Take(Size);
         }
     }
 }
