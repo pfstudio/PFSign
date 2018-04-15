@@ -18,6 +18,8 @@ namespace PFStudio.PFSign.Models
         public DateTime SignInTime { get; private set; }
         // 签退时间
         public DateTime? SignOutTime { get; private set; }
+        // 超时时间
+        private const int TimeOutHours = 8;
 
         public Record() { }
 
@@ -37,9 +39,14 @@ namespace PFStudio.PFSign.Models
             SignOutTime = DateTime.UtcNow;
         }
 
+        public bool IsTimeOut()
+        {
+            return SignInTime.AddHours(TimeOutHours) < DateTime.UtcNow;
+        }
+
         public void SignOutWithTimeOut()
         {
-            SignOutTime = SignInTime.AddHours(8);
+            SignOutTime = SignInTime.AddHours(TimeOutHours);
         }
     }
 }
