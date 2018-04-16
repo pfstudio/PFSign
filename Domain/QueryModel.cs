@@ -21,13 +21,12 @@ namespace PFStudio.PFSign.Domain
         {
             // 默认开始时间为当天
             DateTime beginTime = Begin?.ToUniversalTime() ?? DateTime.Today.ToUniversalTime();
-            // 默认结束时间为开始时间的一天
+            // 默认结束时间为开始时间后的一天
             DateTime endTime = End?.ToUniversalTime() ?? beginTime.AddDays(1);
 
             // 过滤query
             query = from record in query
                     where record.SignInTime >= beginTime && record.SignInTime <= endTime
-                    where record.SignOutTime == null || record.SignOutTime <= endTime
                     select record;
             query = StudentId is null ? query : query.Where(r => r.StudentId == StudentId);
 
