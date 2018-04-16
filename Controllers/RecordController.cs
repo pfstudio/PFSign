@@ -28,22 +28,20 @@ namespace PFStudio.PFSign.Controllers
         }
 
         /// <summary>查询Api</summary>
-        /// <param name="begin">开始日期</param>
-        /// <param name="end">结束日期</param>
         /// <returns>[{Name, Seat, SignInTime, SignOutTime}]</returns>
         [HttpGet("[action]")]
         public async Task<JsonResult> Query(QueryModel model,
             [FromServices]JsonSerializerSettings serializerSettings)
         {
             // 禁用Tracking以提高性能
-            var records = await (from r in model.Filter(_context.Records.AsNoTracking())
-                                 orderby r.SignInTime
-                                 select new
-                                 {
-                                     Name = r.Name,
-                                     SignInTime = r.SignInTime,
-                                     SignOutTime = r.SignOutTime
-                                 }).ToListAsync();
+            var records = 
+                await model.Filter(_context.Records.AsNoTracking())
+                        .Select(r => new
+                        {
+                            r.Name,
+                            r.SignInTime,
+                            r.SignOutTime
+                        }).ToListAsync();
 
             // 在解析时，把时间转换为当地时间
             return new JsonResult(records, serializerSettings);

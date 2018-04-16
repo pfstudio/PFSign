@@ -31,8 +31,13 @@ namespace PFStudio.PFSign.Domain
                     select record;
             query = StudentId is null ? query : query.Where(r => r.StudentId == StudentId);
 
+            // 以签到时间排序
+            query = query.OrderBy(r => r.SignInTime);
+
             // 启用分页
-            return query.Skip(Skip).Take(Size);
+            query = query.Skip(Skip).Take(Size);
+
+            return query;
         }
     }
 }
