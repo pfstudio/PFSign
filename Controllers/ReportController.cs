@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using PFStudio.PFSign.Data;
+using PFStudio.PFSign.Domain;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -15,6 +16,8 @@ namespace PFSign.Controllers
         private readonly RecordDbContext _context;
         // 日志工具
         private readonly ILogger _logger;
+        // 默认要求时间
+        private readonly TimeSpan requiredHours = new TimeSpan(8, 0, 0);
 
         public ReportController(
             RecordDbContext context, ILogger<ReportController> logger)
@@ -23,46 +26,69 @@ namespace PFSign.Controllers
             _logger = logger;
         }
 
+        /// <summary>
+        /// 所有人的签到时间Report
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
         [HttpGet]
-        public async Task<JsonResult> Summary()
+        public async Task<JsonResult> Summary(ReportModel model)
         {
-            // 统计从昨天起往前7天的签到记录
-            DateTime end = DateTime.Today.AddDays(-1).ToUniversalTime();
-            DateTime begin = end.AddDays(-7);
-
-            var result = await (from record in _context.Records.AsNoTracking()
-                                where record.SignInTime >= begin && record.SignInTime <= end
-                                where record.SignOutTime != null
-                                select record into r
-                                group r by r.StudentId into g
+            var result = await (from record in model.Filter(_context.Records.AsNoTracking())
+                                group record by record.StudentId into g
                                 select new
                                 {
                                     StudentId = g.First().StudentId,
-                                    Name = g.First().Name,
-                                    TimeSpan = new TimeSpan(g.Sum(x => (x.SignOutTime.Value - x.SignInTime).Ticks))
+                                    Name      = g.First().Name,
+                                    TimeSpan  = new TimeSpan(g.Sum(record => record.GetDuration().Ticks))
                                 }).ToListAsync();
 
             return Json(result);
         }
 
+        /// <summary>
+        /// 个人的签到时间Report
+        /// </summary>
+        /// <param name="model"></param>
+        /// <param name="studentId"></param>
+        /// <returns></returns>
         [HttpGet("{studentId}")]
-        public async Task<JsonResult> PersonalSummary([FromRoute]string studentId)
+        public async Task<JsonResult> PersonalSummary(ReportModel model, [FromRoute]string studentId)
         {
-            // 统计从昨天起往前7天的签到记录
-            DateTime end = DateTime.Today.AddDays(-1).ToUniversalTime();
-            DateTime begin = end.AddDays(-7);
+            var result = await (from record in model.Filter(_context.Records.AsNoTracking())
+                                where record.StudentId == studentId
+                                select record).ToListAsync();
 
-            var result = await (from record in _context.Records.AsNoTracking()
-                                where record.SignInTime >= begin && record.SignInTime <= end
-                                where record.SignOutTime != null
+            // 当无记录时，默认返回姓名为None
+            // TODO: 计划引入每个人的信息表
+            return Json(new
+            {
+                StudentId = studentId,
+                Name      = result.FirstOrDefault()?.Name ?? "None",
+                TimeSpan  = new TimeSpan(result.Sum(record => record.GetDuration().Ticks)),
+                Required  = requiredHours
+            });
+        }
+
+        /// <summary>
+        /// 个人的签到详情Report
+        /// </summary>
+        /// <param name="model"></param>
+        /// <param name="studentId"></param>
+        /// <returns></returns>
+        [HttpGet("{studentId}/detail")]
+        public async Task<JsonResult> PersonalDetail(ReportModel model, [FromRoute]string studentId)
+        {
+            var result = await (from record in model.Filter(_context.Records.AsNoTracking())
                                 where record.StudentId == studentId
                                 select record into r
                                 group r by r.SignInTime.Date into g
                                 select new
                                 {
-                                    Date = g.Key.ToString("yyyy/MM/dd"),
-                                    TimeSpan = new TimeSpan(g.Sum(x => (x.SignOutTime.Value - x.SignInTime).Ticks))
+                                    Date     = g.Key.ToString("yyyy/MM/dd"),
+                                    TimeSpan = new TimeSpan(g.Sum(record => record.GetDuration().Ticks))
                                 }).ToListAsync();
+
             return Json(result);
         }
     }

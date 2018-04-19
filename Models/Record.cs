@@ -39,6 +39,11 @@ namespace PFStudio.PFSign.Models
             SignOutTime = DateTime.UtcNow;
         }
 
+        public TimeSpan GetDuration()
+        {
+            return SignOutTime.Value - SignInTime;
+        }
+
         public bool IsTimeOut()
         {
             return SignInTime.AddHours(TimeOutHours) < DateTime.UtcNow;
