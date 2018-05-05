@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using PFStudio.PFSign.Models;
+using PFSign.Models;
 
-namespace PFStudio.PFSign.Data
+namespace PFSign.Data
 {
     /// <summary>
     /// 签到记录的数据库上下文

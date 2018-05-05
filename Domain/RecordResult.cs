@@ -1,4 +1,4 @@
-﻿namespace PFStudio.PFSign.Domain
+﻿namespace PFSign.Domain
 {
     /// <summary>
     /// 用于返回签到/签退结果的Model
@@ -45,14 +45,14 @@
         /// <summary>
         /// 签到/签退失败
         /// </summary>
-        /// <param name="error">错误信息</param>
+        /// <param name="errors">错误信息</param>
         /// <returns></returns>
-        public static RecordResult Fail(string error)
+        public static RecordResult Fail(params string[] errors)
         {
             return new RecordResult()
             {
                 Result = false,
-                Message = error
+                Message = string.Join("|", errors)
             };
         }
     }

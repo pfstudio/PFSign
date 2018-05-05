@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using MySql.Data.EntityFrameworkCore.Storage.Internal;
-using PFStudio.PFSign.Data;
+using PFSign.Data;
 using System;
 
 namespace PFSign.Migrations
@@ -19,7 +19,7 @@ namespace PFSign.Migrations
             modelBuilder
                 .HasAnnotation("ProductVersion", "2.0.2-rtm-10011");
 
-            modelBuilder.Entity("PFStudio.PFSign.Models.Record", b =>
+            modelBuilder.Entity("PFSign.Models.Record", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();

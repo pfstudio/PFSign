@@ -5,10 +5,11 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
-using PFStudio.PFSign.Converters;
-using PFStudio.PFSign.Data;
+using PFSign.Converters;
+using PFSign.Data;
+using PFSign.Filters;
 
-namespace PFStudio.PFSign
+namespace PFSign
 {
     public class Startup
     {
@@ -34,8 +35,10 @@ namespace PFStudio.PFSign
         {
             // 注册数据库上下文
             // 务必在AddMvc之前添加
+            //services.AddDbContext<RecordDbContext>(options
+            //   => options.UseMySQL(Configuration.GetConnectionString("Local")));
             services.AddDbContext<RecordDbContext>(options
-               => options.UseMySQL(Configuration.GetConnectionString("Local")));
+                => options.UseInMemoryDatabase("PFSignDev"));
 
             ConfigureBaseServices(services);
         }

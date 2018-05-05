@@ -1,4 +1,4 @@
-﻿namespace PFStudio.PFSign.Resources
+﻿namespace PFSign.Resources
 {
     public static class RecordErrorResource
     {
@@ -13,12 +13,12 @@
         public const string DataBaseError = "数据库错误！";
 
         /// <summary>
-        /// StudentId在签退时的状态错误
+        /// StudentId在签到时的状态错误
         /// </summary>
         public const string StudentSigned = "上次签到未签退！";
 
         /// <summary>
-        /// StudentId和Name在签到时的参数错误
+        /// StudentId和Name参数错误
         /// </summary>
         public const string UserInfoIncorrect = "用户信息错误！";
     }

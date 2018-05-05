@@ -2,7 +2,7 @@
 using Newtonsoft.Json.Converters;
 using System;
 
-namespace PFStudio.PFSign.Converters
+namespace PFSign.Converters
 {
     /// <summary>
     /// 将时间转换为当地时间

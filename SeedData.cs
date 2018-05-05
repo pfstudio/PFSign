@@ -1,10 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using PFStudio.PFSign.Data;
+using PFSign.Data;
 using System;
 using System.Threading;
 
-namespace PFStudio.PFSign
+namespace PFSign
 {
     public class SeedData
     {
@@ -25,7 +25,7 @@ namespace PFStudio.PFSign
                 do
                 {
                     Thread.Sleep(1000);
-                    Console.WriteLine("Stop 1s, wait mysql start...");
+                    Console.WriteLine("Stop 1s, wait database start...");
 
                     try
                     {

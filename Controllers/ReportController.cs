@@ -1,8 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using PFStudio.PFSign.Data;
-using PFStudio.PFSign.Domain;
+using PFSign.Data;
+using PFSign.Domain;
+using PFSign.Extensions;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -34,7 +35,7 @@ namespace PFSign.Controllers
         [HttpGet]
         public async Task<JsonResult> Summary(ReportModel model)
         {
-            var result = await (from record in model.Filter(_context.Records.AsNoTracking())
+            var result = await (from record in _context.Records.AsNoTracking().Filter(model)
                                 group record by record.StudentId into g
                                 select new
                                 {
@@ -55,7 +56,7 @@ namespace PFSign.Controllers
         [HttpGet("{studentId}")]
         public async Task<JsonResult> PersonalSummary(ReportModel model, [FromRoute]string studentId)
         {
-            var result = await (from record in model.Filter(_context.Records.AsNoTracking())
+            var result = await (from record in _context.Records.AsNoTracking().Filter(model)
                                 where record.StudentId == studentId
                                 select record).ToListAsync();
 
@@ -79,7 +80,12 @@ namespace PFSign.Controllers
         [HttpGet("{studentId}/detail")]
         public async Task<JsonResult> PersonalDetail(ReportModel model, [FromRoute]string studentId)
         {
-            var result = await (from record in model.Filter(_context.Records.AsNoTracking())
+            if (studentId == null)
+            {
+                return Json("请检查学号！");
+            }
+
+            var result = await (from record in _context.Records.AsNoTracking().Filter(model)
                                 where record.StudentId == studentId
                                 select record into r
                                 group r by r.SignInTime.Date into g

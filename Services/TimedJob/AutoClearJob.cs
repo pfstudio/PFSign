@@ -1,10 +1,10 @@
 ﻿using Microsoft.Extensions.Logging;
-using PFStudio.PFSign.Data;
+using PFSign.Data;
 using Pomelo.AspNetCore.TimedJob;
 using System;
 using System.Linq;
 
-namespace PFStudio.PFSign.Services
+namespace PFSign.Services
 {
     /// <summary>
     /// 自动清人
