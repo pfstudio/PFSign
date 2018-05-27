@@ -2,28 +2,28 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using PFSign.Data;
-using PFSign.Domain;
-using PFSign.Extensions;
+using PFSign.Models;
+using PFSign.Repositorys;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace PFSign.Controllers
 {
-    [Route("/Report")]
+    [Route("/api/Report")]
     public class ReportController : Controller
     {
         // 签到记录上下文
-        private readonly RecordDbContext _context;
+        private readonly IReportRepository  _reportRepository;
         // 日志工具
         private readonly ILogger _logger;
         // 默认要求时间
         private readonly TimeSpan requiredHours = new TimeSpan(8, 0, 0);
 
         public ReportController(
-            RecordDbContext context, ILogger<ReportController> logger)
+            IReportRepository reportRepository, ILogger<ReportController> logger)
         {
-            _context = context;
+            _reportRepository = reportRepository;
             _logger = logger;
         }
 
@@ -33,16 +33,16 @@ namespace PFSign.Controllers
         /// <param name="model"></param>
         /// <returns></returns>
         [HttpGet]
-        public async Task<JsonResult> Summary(ReportModel model)
+        public async Task<JsonResult> Summary()
         {
-            var result = await (from record in _context.Records.AsNoTracking().Filter(model)
-                                group record by record.StudentId into g
-                                select new
-                                {
-                                    StudentId = g.First().StudentId,
-                                    Name      = g.First().Name,
-                                    TimeSpan  = new TimeSpan(g.Sum(record => record.GetDuration().Ticks))
-                                }).ToListAsync();
+            var recordDurations = await _reportRepository.ReportAllAsync();
+            var result = recordDurations.Select(r => new
+            {
+                r.StudentId,
+                r.Name,
+                r.Duration,
+                Required = requiredHours
+            });
 
             return Json(result);
         }
@@ -54,48 +54,21 @@ namespace PFSign.Controllers
         /// <param name="studentId"></param>
         /// <returns></returns>
         [HttpGet("{studentId}")]
-        public async Task<JsonResult> PersonalSummary(ReportModel model, [FromRoute]string studentId)
-        {
-            var result = await (from record in _context.Records.AsNoTracking().Filter(model)
-                                where record.StudentId == studentId
-                                select record).ToListAsync();
-
-            // 当无记录时，默认返回姓名为None
-            // TODO: 计划引入每个人的信息表
-            return Json(new
-            {
-                StudentId = studentId,
-                Name      = result.FirstOrDefault()?.Name ?? "None",
-                TimeSpan  = new TimeSpan(result.Sum(record => record.GetDuration().Ticks)),
-                Required  = requiredHours
-            });
-        }
-
-        /// <summary>
-        /// 个人的签到详情Report
-        /// </summary>
-        /// <param name="model"></param>
-        /// <param name="studentId"></param>
-        /// <returns></returns>
-        [HttpGet("{studentId}/detail")]
-        public async Task<JsonResult> PersonalDetail(ReportModel model, [FromRoute]string studentId)
+        public async Task<IActionResult> PersonalSummary([FromRoute]string studentId)
         {
             if (studentId == null)
             {
-                return Json("请检查学号！");
+                return NotFound();
             }
 
-            var result = await (from record in _context.Records.AsNoTracking().Filter(model)
-                                where record.StudentId == studentId
-                                select record into r
-                                group r by r.SignInTime.Date into g
-                                select new
-                                {
-                                    Date     = g.Key.ToString("yyyy/MM/dd"),
-                                    TimeSpan = new TimeSpan(g.Sum(record => record.GetDuration().Ticks))
-                                }).ToListAsync();
+            var dateDurations = await _reportRepository.ReportWithAsync(studentId);
 
-            return Json(result);
+            return Json(new
+            {
+                studentId,
+                Total = new TimeSpan(dateDurations.Sum(x => x.Duration.Ticks)),
+                Durations = dateDurations
+            });
         }
     }
 }

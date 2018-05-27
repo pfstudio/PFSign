@@ -22,25 +22,24 @@ namespace PFSign.Models
         private const int TimeOutHours = 8;
 
         // 默认构造
-        public Record() { }
-
-        // 创建时使用的构造
-        public Record(string studentId, string name)
-        {
-            StudentId = studentId;
-            Name = name;
-        }
+        private Record() { }
 
         // 签到
-        public void SignIn()
+        public static Record SignIn(string studentId, string name)
         {
-            SignInTime = DateTime.UtcNow;
+            return new Record
+            {
+                StudentId = studentId,
+                Name = name,
+                SignInTime = DateTime.UtcNow
+            };
         }
 
         // 签退
         public void SignOut()
         {
-            SignOutTime = DateTime.UtcNow;
+            SignOutTime = this.IsTimeOut() ?
+                SignInTime.AddHours(TimeOutHours) : DateTime.UtcNow;
         }
 
         // 计算签到时长
@@ -53,12 +52,6 @@ namespace PFSign.Models
         public bool IsTimeOut()
         {
             return SignInTime.AddHours(TimeOutHours) < DateTime.UtcNow;
-        }
-
-        // 超时签退
-        public void SignOutWithTimeOut()
-        {
-            SignOutTime = SignInTime.AddHours(TimeOutHours);
         }
     }
 }

@@ -1,11 +1,12 @@
-﻿using Microsoft.EntityFrameworkCore;
-using PFSign.Data;
+﻿using PFSign.Repositorys;
 using System;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
 
 namespace PFSign.Attributes
 {
+    /// <summary>
+    /// 查询数据库判断签到状态
+    /// </summary>
     [AttributeUsage(AttributeTargets.Property)]
     public class SignedAttribute : ValidationAttribute
     {
@@ -20,17 +21,13 @@ namespace PFSign.Attributes
         {
             // 获得学号
             string studentId = value as string;
-            // 获取数据库上下文
-            RecordDbContext dbContext = 
-                (RecordDbContext)validationContext.GetService(typeof(RecordDbContext));
-            // 确认签到状态
-            bool state = (from r in dbContext.Records.AsNoTracking()
-                          where r.SignOutTime == null
-                          && r.StudentId == studentId
-                          select r).Count() > 0;
+            // 获取仓储对象
+            IRecordRepository recordRepository = 
+                (IRecordRepository)validationContext.GetService(typeof(IRecordRepository));
             // 判断状态
-            return _requriedState == state ?
+            return _requriedState == recordRepository.IsSigned(studentId) ?
                 ValidationResult.Success :
+                // 返回错误信息
                 new ValidationResult(FormatErrorMessage(""));
         }
     }

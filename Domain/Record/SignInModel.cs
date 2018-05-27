@@ -1,9 +1,8 @@
 ﻿using PFSign.Attributes;
-using PFSign.Models;
 using PFSign.Resources;
 using System.ComponentModel.DataAnnotations;
 
-namespace PFSign.Domain
+namespace PFSign.Domain.Record
 {
     /// <summary>
     /// 签到Model
@@ -12,12 +11,11 @@ namespace PFSign.Domain
     {
         // 学号
         [Required(AllowEmptyStrings = false, ErrorMessage = RecordErrorResource.UserInfoIncorrect)]
+        // 要求当前为非签到状态
         [Signed(false, ErrorMessage = RecordErrorResource.StudentSigned)]
         public string StudentId { get; set; }
         // 姓名
         [Required(AllowEmptyStrings = false, ErrorMessage = RecordErrorResource.UserInfoIncorrect)]
         public string Name { get; set; }
-
-        public Record Create() => new Record(StudentId, Name);
     }
 }

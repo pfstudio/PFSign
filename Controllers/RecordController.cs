@@ -1,12 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
-using PFSign.Data;
-using PFSign.Domain;
-using PFSign.Extensions;
+using PFSign.Domain.Record;
 using PFSign.Filters;
-using PFSign.Models;
+using PFSign.Repositorys;
 using PFSign.Resources;
 using System;
 using System.Linq;
@@ -14,58 +11,56 @@ using System.Threading.Tasks;
 
 namespace PFSign.Controllers
 {
-    [Route("/Record")]
+    [Route("/api/Record")]
+    // 调用Filter，检验对应数据注解中的要求
+    [TypeFilter(typeof(SignModelStateFilter))]
     public class RecordController : Controller
     {
-        // 签到记录的上下文
-        private readonly RecordDbContext _context;
+        // 签到的仓储对象
+        private readonly IRecordRepository _recordRepository;
         // 用于输出日志
         private readonly ILogger _logger;
 
         public RecordController(
-            RecordDbContext context, ILogger<RecordController> logger)
+            IRecordRepository recordRepository, ILogger<RecordController> logger)
         {
-            _context = context;
+            _recordRepository = recordRepository;
             _logger = logger;
         }
 
         /// <summary>查询Api</summary>
-        /// <returns>[{Name, Seat, SignInTime, SignOutTime}]</returns>
+        /// <returns>[{Name, SignInTime, SignOutTime}]</returns>
         [HttpGet("[action]")]
         public async Task<JsonResult> Query(QueryModel model,
             [FromServices]JsonSerializerSettings serializerSettings)
         {
-            // 禁用Tracking以提高性能
-            var records =  await _context.Records.AsNoTracking()
-                .Filter(model)
-                .Select(r => new
+            // 默认开始时间为当天
+            DateTime begin = model.Begin?.ToUniversalTime() ?? DateTime.Today.ToUniversalTime();
+            // 默认结束时间为开始时间后的一天
+            DateTime end = model.End?.ToUniversalTime() ?? begin.AddDays(1);
+            // 查询
+            var records = await _recordRepository.QueryAsync(
+                begin, end, model.StudentId, model.Skip, model.Size);
+
+            // 在解析时，把时间转换为当地时间
+            return new JsonResult(
+                records.Select(r => new
                 {
                     r.Name,
                     r.SignInTime,
                     r.SignOutTime
-                }).ToListAsync();
-
-            // 在解析时，把时间转换为当地时间
-            return new JsonResult(records, serializerSettings);
+                }), serializerSettings);
         }
 
         /// <summary>签到Api</summary>
         /// <returns>签到结果<see cref="RecordResult"/></returns>
         [HttpPost("[Action]")]
-        [TypeFilter(typeof(SignModelStateFilter))]
         public async Task<RecordResult> SignIn([FromBody]SignInModel model)
         {
-            // 创建签到记录
-            Record record = model.Create();
-
             // 签到
-            record.SignIn();
-
-            // 将记录添加到数据库
             try
             {
-                _context.Add(record);
-                await _context.SaveChangesAsync();
+                await _recordRepository.SignInAsync(model.StudentId, model.Name);
             }
             catch (Exception e)
             {
@@ -74,29 +69,18 @@ namespace PFSign.Controllers
             }
 
 
-            return RecordResult.Success();
+            return RecordResult.Success;
         }
 
         /// <summary>签退Api</summary>
         /// <returns>签到结果<see cref="RecordResult"/></returns>
         [HttpPost("[Action]")]
-        [TypeFilter(typeof(SignModelStateFilter))]
         public async Task<RecordResult> SignOut([FromBody]SignOutModel model)
         {
-            // 从数据库获取签到记录
-            Record record = await (from r in _context.Records
-                                   where r.SignOutTime == null
-                                   && r.StudentId == model.StudentId
-                                   select r).FirstAsync();
-
             // 签退
-            record.SignOut();
-
-            // 更新签到记录
             try
             {
-                _context.Update(record);
-                await _context.SaveChangesAsync();
+                await _recordRepository.SignOutAsync(model.StudentId);
             }
             catch (Exception e)
             {
@@ -104,7 +88,7 @@ namespace PFSign.Controllers
                 return RecordResult.Fail(RecordErrorResource.DataBaseError);
             }
 
-            return RecordResult.Success();
+            return RecordResult.Success;
         }
     }
 }

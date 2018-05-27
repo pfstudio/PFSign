@@ -21,5 +21,10 @@
         /// StudentId和Name参数错误
         /// </summary>
         public const string UserInfoIncorrect = "用户信息错误！";
+
+        /// <summary>
+        /// 查询签到记录时，分页参数设置错误
+        /// </summary>
+        public const string PagingSizeError = "分页大小错误！";
     }
 }

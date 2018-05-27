@@ -9,6 +9,7 @@ namespace PFSign.Converters
     /// </summary>
     public class LocalDateTimeConverter : DateTimeConverterBase
     {
+        // 不使用该方法
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
         {
             throw new NotImplementedException();

@@ -1,8 +1,10 @@
 ﻿using Microsoft.Extensions.Logging;
 using PFSign.Data;
+using PFSign.Repositorys;
 using Pomelo.AspNetCore.TimedJob;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace PFSign.Services
 {
@@ -21,39 +23,12 @@ namespace PFSign.Services
 
         // 每天定时清人
         [Invoke(Begin = "2018-01-01", Interval = 1000 * 60 * 60 * 24)]
-        // 注入数据库上下文
-        public void Clear(RecordDbContext context)
+        // 注入仓储对象
+        public async Task Clear(IRecordRepository recordRepository)
         {
             _logger.LogDebug("Invoke the AutoClearJob");
 
-            // 查询未签退列表
-            var unsignOutList = (from r in context.Records
-                                 where r.SignOutTime == null
-                                 select r).ToList();
-
-            // 对未签退的人进行处理
-            foreach (var record in unsignOutList)
-            {
-                if (record.IsTimeOut())
-                {
-                    record.SignOutWithTimeOut();
-                }
-                else
-                {
-                    record.SignOut();
-                }
-            }
-
-            // 写入数据库
-            try
-            {
-                context.UpdateRange(unsignOutList);
-                context.SaveChanges();
-            }
-            catch (Exception e)
-            {
-                _logger.LogError(e.Message);
-            }
+            await recordRepository.ClearAllUnSignOutAsync();
         }
     }
 }
