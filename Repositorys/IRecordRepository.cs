@@ -18,6 +18,14 @@ namespace PFSign.Repositorys
         /// <returns>签到记录的列表</returns>
         Task<List<Record>> QueryAsync(DateTime begin, DateTime end, string studentId, int skip, int size);
         /// <summary>
+        /// 统计签到记录数量
+        /// </summary>
+        /// <param name="begin">起始日期</param>
+        /// <param name="end">结束日期</param>
+        /// <param name="studentId">学号</param>
+        /// <returns>签到记录的数量</returns>
+        Task<int> CountAsync(DateTime begin, DateTime end, string studentId);
+        /// <summary>
         /// 清空所有未签退的人员
         /// </summary>
         Task ClearAllUnSignOutAsync();
@@ -37,5 +45,17 @@ namespace PFSign.Repositorys
         /// </summary>
         /// <param name="studentId">学号</param>
         bool IsSigned(string studentId);
+        /// <summary>
+        /// 根据主键查找签到记录
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        Task<Record> FindWithAsync(int id);
+        /// <summary>
+        /// 删除非法签到记录
+        /// </summary>
+        /// <param name="id">签到记录的主键</param>
+        /// <returns></returns>
+        Task DeleteWithAsync(int id);
     }
 }

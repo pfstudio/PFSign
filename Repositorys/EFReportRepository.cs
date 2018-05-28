@@ -48,6 +48,7 @@ namespace PFSign.Repositorys
             // 统计签到记录
             var result = await (from r in _dbContext.Records.AsNoTracking()
                                 where r.StudentId == studentId
+                                where r.SignOutTime != null
                                 where r.SignInTime >= begin
                                 && r.SignInTime < end
                                 group r by r.SignInTime.Date into g

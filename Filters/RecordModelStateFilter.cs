@@ -8,9 +8,9 @@ using System.Threading.Tasks;
 namespace PFSign.Filters
 {
     /// <summary>
-    /// Filter与属性注解结合用于确保签到状态
+    /// Filter与属性注解结合用于模型状态
     /// </summary>
-    public class SignModelStateFilter : IAsyncActionFilter
+    public class RecordModelStateFilter : IAsyncActionFilter
     {
         public async Task OnActionExecutionAsync(
             ActionExecutingContext context,

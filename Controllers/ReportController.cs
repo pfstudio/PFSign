@@ -1,8 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using PFSign.Data;
-using PFSign.Models;
 using PFSign.Repositorys;
 using System;
 using System.Linq;
@@ -13,7 +10,7 @@ namespace PFSign.Controllers
     [Route("/api/Report")]
     public class ReportController : Controller
     {
-        // 签到记录上下文
+        // 报告仓储
         private readonly IReportRepository  _reportRepository;
         // 日志工具
         private readonly ILogger _logger;

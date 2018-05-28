@@ -8,10 +8,19 @@
     }
   },
   "profiles": {
-    "PFSign": {
+    "IIS Express": {
       "commandName": "IISExpress",
+      "launchBrowser": true,
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
+      }
+    },
+    "PFSign": {
+      "commandName": "Project",
+      "applicationUrl": "http://localhost:5000",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "ConnectionStrings:MySQL": "server=localhost;userid=root;pwd=password;port=3306;database=PFSignDev;"
       }
     }
   }

@@ -6,14 +6,13 @@ using PFSign.Filters;
 using PFSign.Repositorys;
 using PFSign.Resources;
 using System;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace PFSign.Controllers
 {
     [Route("/api/Record")]
     // 调用Filter，检验对应数据注解中的要求
-    [TypeFilter(typeof(SignModelStateFilter))]
+    [TypeFilter(typeof(RecordModelStateFilter))]
     public class RecordController : Controller
     {
         // 签到的仓储对象
@@ -30,7 +29,7 @@ namespace PFSign.Controllers
 
         /// <summary>查询Api</summary>
         /// <returns>[{Name, SignInTime, SignOutTime}]</returns>
-        [HttpGet("[action]")]
+        [HttpGet]
         public async Task<JsonResult> Query(QueryModel model,
             [FromServices]JsonSerializerSettings serializerSettings)
         {
@@ -44,12 +43,11 @@ namespace PFSign.Controllers
 
             // 在解析时，把时间转换为当地时间
             return new JsonResult(
-                records.Select(r => new
+                new
                 {
-                    r.Name,
-                    r.SignInTime,
-                    r.SignOutTime
-                }), serializerSettings);
+                    Total = await _recordRepository.CountAsync(begin, end, model.StudentId),
+                    Result = records
+                }, serializerSettings);
         }
 
         /// <summary>签到Api</summary>
@@ -86,6 +84,23 @@ namespace PFSign.Controllers
             {
                 _logger.LogError($"DataBase Error: {e.Message}");
                 return RecordResult.Fail(RecordErrorResource.DataBaseError);
+            }
+
+            return RecordResult.Success;
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<RecordResult> DeleteRecord([FromRoute]int id)
+        {
+            // 删除
+            try
+            {
+                await _recordRepository.DeleteWithAsync(id);
+            }
+            catch (Exception e)
+            {
+                _logger.LogError($"DataBase Error: {e.Message}");
+                return RecordResult.Fail(RecordErrorResource.RecordError);
             }
 
             return RecordResult.Success;

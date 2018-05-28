@@ -82,5 +82,37 @@ namespace PFSign.Repositorys
             _dbContext.Update(record);
             await _dbContext.SaveChangesAsync();
         }
+
+        public async Task DeleteWithAsync(int id)
+        {
+            // 根据主键查找记录
+            Record record = await _dbContext.Records.FindAsync(id);
+
+            // 移除该记录
+            _dbContext.Remove(record);
+            await _dbContext.SaveChangesAsync();
+        }
+
+        public async Task<Record> FindWithAsync(int id)
+        {
+            // 根据主键查找记录
+            Record record = await _dbContext.Records.FindAsync(id);
+
+            return record;
+        }
+
+        public async Task<int> CountAsync(DateTime begin, DateTime end, string studentId)
+        {
+            // 筛选时间
+            var query = _dbContext.Records.Where(r => r.SignInTime >= begin && r.SignInTime <= end);
+
+            // 筛选学号
+            if (!string.IsNullOrEmpty(studentId))
+            {
+                query = query.Where(r => r.StudentId == studentId);
+            }
+
+            return await query.CountAsync();
+        }
     }
 }

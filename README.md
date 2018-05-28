@@ -10,10 +10,12 @@
 
 ## API信息如下：
 
-### /Record
+详细可参考[Postman Document](https://documenter.getpostman.com/view/2533705/RW8CGnYp)
 
-- /Record/Query GET
-  查询签到记录，参数有begin, end, studentId
+### /api/Record
+
+- GET /api/Record/
+  查询签到记录，参数有人begin,end,studentId,skip,size
 - /Record/SignIn POST
   签到，参数有studentId, name
 - /Record/SignOut POST
@@ -23,17 +25,18 @@
 ### /Report
 
 - /Report GET
-  查询指定时间内的每个人的签到时间统计
+  查询本周内的每个人的签到时间统计
 - /Report/{studentId} GET
-  查询指定时间内某个人的签到概览
-- /Report/{studentId}/detail GET
-  查询指定时间内某个人的每天签到时间
+  查询本周内某个人的每天签到时间
 
 ## 更新日志
 
-### 2018/05/27
+### 2018/05/28
 
-尝试使用仓储模式，分离数据库逻辑
+1. 尝试使用仓储模式，分离数据库逻辑
+2. 尝试使用REST设计模式优化API
+3. 在容器构建时写入时区信息 Asia/Shanghai
+4. 数据库连接字符串的获取形式改为通过环境变量注入
 
 ### 2018/05/06
 
