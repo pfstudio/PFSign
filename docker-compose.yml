@@ -16,4 +16,4 @@ services:
       - "5000:80"
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - "ConnectionStrings:MySQL=server=mysql;userid=root;pwd=password;port=3306;database=PFSignDev;"
+      - "MySQL=server=mysql;userid=root;pwd=password;port=3306;database=PFSignDev;"

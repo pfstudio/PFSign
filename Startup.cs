@@ -30,7 +30,7 @@ namespace PFSign
             // 务必在AddMvc之前添加
             // 从环境变量中获取连接字符串
             services.AddDbContext<RecordDbContext>(options
-               => options.UseMySQL(Configuration.GetConnectionString("MySQL")));
+               => options.UseMySQL(Configuration.GetValue<string>("MySQL")));
             services.AddScoped<IRecordRepository, EFRecordRepository>();
             services.AddScoped<IReportRepository, EFReportRepository>();
 
