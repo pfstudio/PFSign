@@ -54,7 +54,7 @@ namespace PFSign.Repositorys
                                 group r by r.SignInTime.Date into g
                                 select new DateDuration
                                 {
-                                    Date = g.Key,
+                                    Date = g.Key.Date,
                                     Duration = new TimeSpan(g.Sum(r => r.GetDuration().Ticks))
                                 }).ToListAsync();
 
