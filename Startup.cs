@@ -51,6 +51,17 @@ namespace PFSign
 
                 return serializerSettings;
             });
+
+            services.AddCors(options => 
+            {
+                options.AddPolicy("dev", builder => 
+                {
+                    builder.AllowAnyMethod();
+                    builder.AllowAnyHeader();
+                    builder.SetIsOriginAllowed(origin => origin.Split(':')[1] == "//localhost");
+                    builder.AllowCredentials();
+                });
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -64,6 +75,8 @@ namespace PFSign
             app.UseTimedJob();
 
             app.UseStaticFiles();
+
+            app.UseCors("dev");
 
             app.UseMvc();
         }
